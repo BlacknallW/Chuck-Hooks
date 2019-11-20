@@ -1,7 +1,10 @@
     import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Wrapper from "./components/wrapper";
 import Quote from "./components/quotes";
 import CategoryList from "./components/categoryList";
+
+import "bulma/css/bulma.css";
 import "./App.css";
 
 function App() {
@@ -18,8 +21,13 @@ function App() {
                         </li>
                     </ul>
                 </nav>
-                <Route path="/" exact component={CategoryList} />
-                <Route path="/category/:quote_category?" component={Quote} />
+                <Wrapper>
+                    <Route path="/" exact component={CategoryList} />
+                    <Route
+                        path="/category/:quote_category?"
+                        component={Quote}
+                    />
+                </Wrapper>
             </Router>
         </div>
     );
