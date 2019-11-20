@@ -1,41 +1,33 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { loadData } from "../utils/loadData";
 
-class CategoryList extends Component {
-    state = {
-        categories: []
-    };
+function CategoryList() {
+    const [categories, setCategories] = useState([]);
+    
+    useEffect(() => {
+    getCategories();
+  });
 
-    async componentDidMount() {
-        this.getCategories();
-    }
+  const getCategories = async () => {
+    const categories = await loadData(
+      `https://api.chucknorris.io/jokes/categories`
+    );
 
-    getCategories = async () => {
-        const categories = await loadData(
-            `https://api.chucknorris.io/jokes/categories`
-        );
+    setCategories(categories);
+  };
 
-        this.setState({
-            categories
-        });
-    };
-
-    render() {
-        const { categories } = this.state;
-
+  return (
+    <ul>
+      {categories.map((category, id) => {
         return (
-            <ul>
-                {categories.map((category, id) => {
-                    return (
-                        <li key={`category-${id}`}>
-                            <Link to={`/category/${category}`}>{category}</Link>
-                        </li>
-                    );
-                })}
-            </ul>
+          <li key={`category-${id}`}>
+            <Link to={`/category/${category}`}>{category}</Link>
+          </li>
         );
-    }
+      })}
+    </ul>
+  );
 }
 
 export default CategoryList;

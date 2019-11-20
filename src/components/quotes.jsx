@@ -1,49 +1,40 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { loadData } from "../utils/loadData";
 
-class Quote extends Component {
-    state = {
-        quote: "Fetching quote..."
-    };
+const Quote = (props) =>{
+    const [quotes, setQuotes] = useState('')
+    const [category, setCategories] = useState([]);
+   
 
-    async componentDidMount() {
-        const category = this.props.match.params.quote_category;
-        console.log("this.props ", this.props);
 
-        this.setState({
-            category
-        });
+    useEffect ( () => {
+        const category = props.match.params.quote_category;
 
-        this.renderQuote(category);
-    }
+        setCategories(category)
 
-    renderQuote = async category => {
+        renderQuote(category);
+    },[props.match.params.quote_category])
+
+    const renderQuote = async category => {
         const response = await loadData(
             `https://api.chucknorris.io/jokes/random?category=${category}`
         );
         const quote = response.value;
-        this.setState({
-            quote
-        });
+
+        setQuotes(quote)
     };
 
-    refreshQuote = () => {
-        const { category } = this.state;
-        this.renderQuote(category);
+    const refreshQuote = () => {
+        renderQuote(category);
     };
-
-    render() {
-        const { quote, category } = this.state;
-
         return (
             <>
-                <p>{quote}</p>
-                <button onClick={() => this.refreshQuote()}>
+                <p>{quotes}</p>
+                <button onClick={refreshQuote}>
                     Get another quote from the {category} category
                 </button>
             </>
         );
     }
-}
 
 export default Quote;
